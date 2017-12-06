@@ -11,7 +11,7 @@
 #include <iostream>
 
 const float TILE_2_PROBABILITY = 0.7;
-const float TILE_4_PROBABILITY = 0.3;
+//const float TILE_4_PROBABILITY = 0.3;
 
 
 
@@ -24,7 +24,7 @@ GameBoard::GameBoard(int8_t size)
 	for(int rindex = 0; rindex < size; rindex++){
 		rows[rindex] = new int*[size];
 		for(int cindex = 0; cindex < size; cindex++){
-			rows[rindex][cindex] = new int (1);
+			rows[rindex][cindex] = new int (0);
 		}
 	}
 	
@@ -50,6 +50,124 @@ GameBoard::~GameBoard(){
 	delete[] rows;
 	delete[] cols;
 }
+
+
+bool GameBoard::canMoveUp()const{
+	for(int index = 0; index < SIZE; index++){
+		if(canArrayMoveLeft(cols[index])){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameBoard::canMoveDown()const{
+	for(int index = SIZE-1; index >= 0; index--){
+		if(canArrayMoveRight(cols[index])){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameBoard::canMoveLeft()const{
+	for(int index = 0; index < SIZE; index++){
+		if(canArrayMoveLeft(rows[index])){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameBoard::canMoveRight()const{
+	for(int index = SIZE-1; index >= 0; index--){
+		if(canArrayMoveRight(rows[index])){
+			return true;
+		}
+	}
+	return false;
+}
+
+
+// Calculate how many zeros there are starting from right, before
+// encountering first non-zero term
+// Check if that number agree with the total # of zeros in this array
+bool GameBoard::canArrayMoveLeft(int**& arr)const{
+	
+	bool hasZeroBetweenVal = false;
+	int currentPivot = *arr[SIZE-1];
+	
+	for(int index = SIZE-2; index >= 0; index--){
+		
+		int thisVal = *arr[index];
+		
+		if(thisVal == 0){
+			if(currentPivot != thisVal){
+				hasZeroBetweenVal = true;
+			}else{
+				continue;
+			}
+		}else if(thisVal == currentPivot){
+			return true;
+		}else{
+			currentPivot = thisVal;
+		}
+	}
+	
+	return (currentPivot != 0) && hasZeroBetweenVal;
+}
+
+// Calculate how many zeros there are starting from left, before
+// encountering first non-zero term
+// Check if that number agree with the total # of zeros in this array
+bool GameBoard::canArrayMoveRight(int**& arr)const{
+	
+	bool hasZeroBetweenVal = false;
+	int currentPivot = *arr[0];
+	
+	for(int index = 1; index < SIZE; index++){
+		
+		int thisVal = *arr[index];
+		
+		if(thisVal == 0){
+			if(currentPivot != thisVal){
+			hasZeroBetweenVal = true;
+			}else{
+				continue;
+			}
+		}else if(thisVal == currentPivot){
+			return true;
+		}else{
+			currentPivot = thisVal;
+		}
+	}
+	
+	return (currentPivot != 0) && hasZeroBetweenVal;
+}
+
+
+
+bool GameBoard::checkMate()const{
+	for(int rindex = 0; rindex < SIZE; rindex++){
+		for(int cindex = rindex % 2; cindex < SIZE; cindex += 2){
+			if (checkTileMoveable(rindex, cindex)) return false;
+		}
+	}
+	return true;
+}
+
+bool GameBoard::checkTileMoveable(int row, int col) const{
+	
+	int tileValue = *rows[row][col];
+	
+	return tileValue == 0 ||
+		   (row - 1 >= 0 && tileValue == *rows[row-1][col]) ||
+		   (row + 1 < SIZE && tileValue == *rows[row+1][col]) ||
+		   (col - 1 >= 0 && tileValue == *rows[row][col-1]) ||
+		   (col + 1 < SIZE && tileValue == *rows[row][col+1]);
+}
+
+
 
 
 int32_t GameBoard::moveUp(){
@@ -210,6 +328,7 @@ int32_t GameBoard::mergeArrayRight(int**& arr){
 // Generate a random tile on one of the empty tiles
 // the value of tile is determined by chance and constants
 void GameBoard::generateNewTile(){
+	
 	int empty_count = getEmptyCount();
 	
 	int ith_empty = rand() % empty_count;
@@ -244,6 +363,10 @@ int32_t GameBoard::getScore()const{
 	return score;
 }
 
+int GameBoard::getValueAt(int row, int col)const{
+	return *rows[row][col];
+}
+
 
 
 
@@ -258,7 +381,8 @@ std::string GameBoard::toString() const{
 		}
 		str += "\n\n";
 	}
-		
+	
+	str += "score: " + std::to_string(score);
 	
 	return str;
 }

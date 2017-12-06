@@ -27,6 +27,8 @@ public:
 	int32_t moveUp();
 	int32_t moveDown();
 	
+	// Determine whether the board is dead
+	// (no more move available in any direction)
 	bool checkMate() const;
 	
 	// Check whether board is moveable in each direction
@@ -35,9 +37,13 @@ public:
 	bool canMoveUp() const;
 	bool canMoveDown() const;
 	
+	// Generate a new Tile with random value on the board
 	void generateNewTile();
-	int getEmptyCount() const;
 	
+	int getEmptyCount() const;
+	int getValueAt(int row, int col) const;
+	
+	// Return the string representation of the board, including score
 	std::string toString() const;
 	
 	// Return a new board that has the same state as current Board
@@ -46,6 +52,8 @@ public:
 	int32_t getScore() const;
 	
 private:
+	
+	bool checkTileMoveable(int row, int col)const;
 	
 	void pushArrayLeft(int**&);
 	int32_t mergeArrayLeft(int**&);
@@ -56,6 +64,12 @@ private:
 	int32_t mergeArrayRight(int**&);
 	void push2DArrayRight(int***&);
 	int32_t merge2DArrayRight(int***&);
+	
+	// Determine whether an given array can be moved/merged towards
+	// right or left
+	bool canArrayMoveRight(int**&) const;
+	bool canArrayMoveLeft(int**&) const;
+	
 	
 	
 	

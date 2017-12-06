@@ -10,6 +10,7 @@
 #include "gameboard.h"
 #include <ctime>
 #include <cstdlib>
+#include "gameClient.hpp"
 
 
 //TODO:
@@ -18,11 +19,12 @@
 
 int main(int argc, const char * argv[]) {
 	
+	/*
 	GameBoard board0 = GameBoard();
 	
 	GameBoard board1 = GameBoard(5);
 	
-	srand(time(0));
+	srand((unsigned int)time(0));
 
 	
 
@@ -32,17 +34,19 @@ int main(int argc, const char * argv[]) {
 	std::cout<< board1.toString() << "\n";
 	
 	board1.moveUp();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	board1.generateNewTile();
-	
 	
 	std::cout<< board1.toString() << "\n";
+	
+	std::cout<< board1.checkMate() <<"\n";
+	std::cout<< board0.checkMate() <<"\n";
+	*/
+	
+	
+	GameClient game = GameClient();
+	
+	game.run();
+	
+	
 	
 	
 	
