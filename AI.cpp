@@ -21,7 +21,7 @@ AI::~AI(){
 
 void AI::simulate(int8_t depth){
 	
-	depth_to_search = depth;
+	depth_to_search = (depth+1)*2;
 	
 	board->generateNewTile();
 	board->generateNewTile();
@@ -29,11 +29,10 @@ void AI::simulate(int8_t depth){
 	std::cout<< board->toString();
 	
 	while(!board->checkMate()){
-		Direction dir = board->score > 20000 ? expectiMaxMove(depth+1) : expectiMaxMove(depth);
-		
+		Direction dir = board->score > 60000 ? expectiMaxMove(depth+1) : expectiMaxMove(depth);
 		board->score += board->moveInDir(dir);
 		board->generateNewTile();
-		std::cout<< board->toString() << " "<<dir << "\n";
+		std::cout<< board->toString();
 	}
 	
 }
@@ -77,11 +76,7 @@ int64_t AI::ABminimax(const GameBoard* board, int8_t depth, int64_t alpha, int64
 		return boardEvaluation(board);
 	}
 	
-	if(board->checkMate()){
-		return depth * DEAD_PENALTY;
-	}
-	
-	if(!board->maxTileInTLCorner()){
+	if(board->checkMate() || !board->maxTileInTLCorner()){
 		
 		int64_t sum = 0;
 		
@@ -163,7 +158,7 @@ Direction AI::expectiMaxMove(int8_t depth)const{
 			
 			temp += expectiMax(newBoard, depth*2-1, false);
 			
-			std::cout<<dir<<" with score " <<temp << "\n";
+			//std::cout<<dir<<" with score " <<temp << "\n";
 			
 			if(temp > bestScore) {
 				bestScore = temp;
@@ -183,11 +178,7 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 		return boardEvaluation(board);
 	}
 	
-	if(board->checkMate()){
-		return depth * DEAD_PENALTY;
-	}
-	
-	if(!board->maxTileInTLCorner()){
+	if(board->checkMate() || !board->maxTileInTLCorner()){
 		
 		int64_t sum = 0;
 		
@@ -197,7 +188,7 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 			}
 		}
 		
-		return -sum;
+		return -(sum * depth * depth);
 	}
 	
 	if(mover){
@@ -243,7 +234,7 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 				
 				expectedSum += (TILE_2_PROBABILITY * baseTileScore);
 				
-				if(depth_to_search - depth >= 2){
+				if(depth_to_search - depth > 6){
 					GameBoard* doubleBaseBoard = new GameBoard(*board);
 					doubleBaseBoard->setValueAt(2*TILE_BASE_VALUE, row, col);
 	
