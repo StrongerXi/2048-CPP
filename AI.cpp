@@ -26,14 +26,17 @@ void AI::simulate(int8_t depth){
 	board->generateNewTile();
 	board->generateNewTile();
 	
-	std::cout<< board->toString();
+	//std::cout<< board->toString();
 	
 	while(!board->checkMate()){
-		Direction dir = board->score > 60000 ? expectiMaxMove(depth+1) : expectiMaxMove(depth);
+		Direction dir =  board->score > 60000 ? expectiMaxMove(depth+1) : expectiMaxMove(depth);
 		board->score += board->moveInDir(dir);
 		board->generateNewTile();
-		std::cout<< board->toString();
+		//std::cout<< board->toString();
 	}
+	
+	std::cout<< board->toString();
+	
 	
 }
 
@@ -234,13 +237,13 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 				
 				expectedSum += (TILE_2_PROBABILITY * baseTileScore);
 				
-				if(depth_to_search - depth > 6){
-					GameBoard* doubleBaseBoard = new GameBoard(*board);
-					doubleBaseBoard->setValueAt(2*TILE_BASE_VALUE, row, col);
+				if(depth_to_search - depth < 6){
+					
+					//GameBoard* doubleBaseBoard = new GameBoard(*board);
+					baseBoard->setValueAt(2*TILE_BASE_VALUE, row, col);
 	
-					int64_t doubleBaseTileScore = expectiMax(doubleBaseBoard, depth-1, true);
+					int64_t doubleBaseTileScore = expectiMax(baseBoard, depth-1, true);
 					expectedSum += (TILE_4_PROBABILITY * doubleBaseTileScore);
-					delete doubleBaseBoard;
 				}
 				
 				delete baseBoard;
