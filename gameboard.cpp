@@ -9,10 +9,7 @@
 #include <stdio.h>
 #include "gameboard.h"
 #include <iostream>
-
-const float TILE_2_PROBABILITY = 0.7;
-//const float TILE_4_PROBABILITY = 0.3;
-
+#include "settings.h"
 
 
 GameBoard::GameBoard(int8_t size)
@@ -49,6 +46,39 @@ GameBoard::~GameBoard(){
 	
 	delete[] rows;
 	delete[] cols;
+}
+
+GameBoard::GameBoard(GameBoard const & toCopyFrom)
+:SIZE(toCopyFrom.getSize())
+{
+	
+	rows = new int**[SIZE];
+	cols = new int**[SIZE];
+	
+	for(int row = 0; row < SIZE; row++){
+		rows[row] = new int*[SIZE];
+		for(int col = 0; col < SIZE; col++){
+			rows[row][col] = new int (toCopyFrom.getValueAt(row, col));
+		}
+	}
+	
+	for(int col = 0; col < SIZE; col++){
+		cols[col] = new int*[SIZE];
+		for(int row = 0; row < SIZE; row++){
+			cols[col][row] = rows[row][col];
+		}
+	}
+	score = toCopyFrom.score;
+}
+
+
+bool GameBoard::boardMoveableIn(Direction dir)const{
+	switch (dir) {
+		case up: return canMoveUp();
+		case down: return canMoveDown();
+		case left: return canMoveLeft();
+		case right: return canMoveRight();
+	}
 }
 
 
@@ -160,7 +190,7 @@ bool GameBoard::checkTileMoveable(int row, int col) const{
 	
 	int tileValue = *rows[row][col];
 	
-	return tileValue == 0 ||
+	return getEmptyCount() != 0 ||
 		   (row - 1 >= 0 && tileValue == *rows[row-1][col]) ||
 		   (row + 1 < SIZE && tileValue == *rows[row+1][col]) ||
 		   (col - 1 >= 0 && tileValue == *rows[row][col-1]) ||
@@ -168,6 +198,14 @@ bool GameBoard::checkTileMoveable(int row, int col) const{
 }
 
 
+int32_t GameBoard::moveInDir(Direction dir){
+	switch (dir) {
+		case up: return moveUp();
+		case down: return moveDown();
+		case left: return moveLeft();
+		case right: return moveRight();
+	}
+}
 
 
 int32_t GameBoard::moveUp(){
@@ -368,6 +406,39 @@ int GameBoard::getValueAt(int row, int col)const{
 }
 
 
+int8_t GameBoard::getSize()const{
+	return SIZE;
+}
+
+
+void GameBoard::setValueAt(int value, int row, int col){
+	*rows[row][col] = value;
+}
+
+
+bool GameBoard::maxTileInTLCorner()const{
+	int maxTile = 0;
+	for(int row = 0; row < SIZE; row++){
+		for(int col=0; col < SIZE; col++){
+			maxTile = *rows[row][col] > maxTile ? *rows[row][col] : maxTile;
+		}
+	}
+	return (*rows[0][0] == maxTile);
+}
+
+
+int** GameBoard::getTable()const{
+	int** board = new int*[SIZE];
+	
+	for(int row = 0; row < SIZE; row++){
+		board[row] = new int[SIZE];
+		for(int col=0; col < SIZE; col++){
+			board[row][col] = *rows[row][col];
+		}
+	}
+	
+	return board;
+}
 
 
 std::string GameBoard::toString() const{
@@ -382,7 +453,7 @@ std::string GameBoard::toString() const{
 		str += "\n\n";
 	}
 	
-	str += "score: " + std::to_string(score);
+	str += "score: " + std::to_string(score) + "\n";
 	
 	return str;
 }

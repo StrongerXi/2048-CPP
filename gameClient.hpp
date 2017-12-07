@@ -10,6 +10,7 @@
 #define gameClient_hpp
 
 #include "gameboard.h"
+#include "settings.h"
 
 class GameClient{
 	
@@ -28,12 +29,6 @@ public:
 	
 private:
 	
-	enum Direction{
-		up,
-		down,
-		left,
-		right
-	};
 	
 	GameBoard* board;
 	

@@ -11,6 +11,7 @@
 #include <ctime>
 #include <cstdlib>
 #include "gameClient.hpp"
+#include "AI.hpp"
 
 
 //TODO:
@@ -24,8 +25,6 @@ int main(int argc, const char * argv[]) {
 	
 	GameBoard board1 = GameBoard(5);
 	
-	srand((unsigned int)time(0));
-
 	
 
 	std::cout<< board0.toString() << "\n";
@@ -42,13 +41,12 @@ int main(int argc, const char * argv[]) {
 	*/
 	
 	
-	GameClient game = GameClient();
+	srand((unsigned int)time(0));
+
 	
-	game.run();
+	AI bot = AI();
 	
-	
-	
-	
+	bot.simulate(3);
 	
 	return 0;
 }
