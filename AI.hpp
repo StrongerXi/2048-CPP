@@ -24,7 +24,7 @@ public:
 	
 	// Using Alpha-Beta pruning to speed up minimax algorithm
 	// This function returns the best-case score for the maximizer if it's true
-	int64_t ABminimax(const GameBoard* board, int8_t depth, int64_t alpha, int64_t beta, bool maximizer)const;
+	int64_t ABminimax(const GameBoard& board, int8_t depth, int64_t alpha, int64_t beta, bool maximizer)const;
 	
 	Direction ABminimaxMove(int8_t depth)const;
 	

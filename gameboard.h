@@ -64,6 +64,7 @@ public:
 	
 	int** getTable()const;
 	
+	int boardSum()const;
 	
 	int32_t score;
 

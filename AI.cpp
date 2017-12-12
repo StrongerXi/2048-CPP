@@ -49,12 +49,11 @@ Direction AI::ABminimaxMove(int8_t depth)const{
 	for(Direction dir : directionIterator){
 		if(board->boardMoveableIn(dir)){
 			
-			GameBoard* newBoard = new GameBoard(*board);
-			int32_t temp = newBoard->moveInDir(dir);
+			GameBoard newBoard = GameBoard(*board);
+			int32_t temp = newBoard.moveInDir(dir);
 			
 			temp += ABminimax(newBoard, depth*2-1, std::numeric_limits<int64_t>::min(),
 								std::numeric_limits<int64_t>::max(), false);
-			
 			
 			std::cout<<dir<<" with score " <<temp << "\n";
 			
@@ -62,7 +61,6 @@ Direction AI::ABminimaxMove(int8_t depth)const{
 				bestScore = temp;
 				bestMove = dir;
 			}
-			delete newBoard;
 		}
 	}
 	
@@ -73,19 +71,19 @@ Direction AI::ABminimaxMove(int8_t depth)const{
 
 
 
-int64_t AI::ABminimax(const GameBoard* board, int8_t depth, int64_t alpha, int64_t beta, bool maximizer)const{
+int64_t AI::ABminimax(const GameBoard& board, int8_t depth, int64_t alpha, int64_t beta, bool maximizer)const{
 	
 	if(depth == 0){
-		return boardEvaluation(board);
+		return boardEvaluation(&board);
 	}
 	
-	if(board->checkMate() || !board->maxTileInTLCorner()){
+	if(board.checkMate() || !board.maxTileInTLCorner()){
 		
 		int64_t sum = 0;
 		
-		for(int row = 0; row < board->getSize(); row++){
-			for(int col = 0; col < board->getSize(); col++){
-				sum += board->getValueAt(row, col);
+		for(int row = 0; row < board.getSize(); row++){
+			for(int col = 0; col < board.getSize(); col++){
+				sum += board.getValueAt(row, col);
 			}
 		}
 		
@@ -96,12 +94,12 @@ int64_t AI::ABminimax(const GameBoard* board, int8_t depth, int64_t alpha, int64
 		int64_t potentialHigherAlpha = std::numeric_limits<int64_t>::min();
 		
 		for(Direction dir : directionIterator){
-			if(board->boardMoveableIn(dir)){
+			if(board.boardMoveableIn(dir)){
 				
 				
-				GameBoard* newBoard = new GameBoard(*board);
+				GameBoard newBoard = GameBoard(board);
 				
-				int32_t score = newBoard->moveInDir(dir);
+				int32_t score = newBoard.moveInDir(dir);
 				
 				score += ABminimax(newBoard, depth-1, alpha, beta, false);
 				
@@ -118,20 +116,20 @@ int64_t AI::ABminimax(const GameBoard* board, int8_t depth, int64_t alpha, int64
 	
 	int64_t potentialLowerBeta = std::numeric_limits<int64_t>::max();
 	
-	for(int row = 0; row < board->getSize(); row++){
+	for(int row = 0; row < board.getSize(); row++){
 		
-		for(int col = 0; col < board->getSize(); col++){
+		for(int col = 0; col < board.getSize(); col++){
 			
-			if(board->getValueAt(row,col) == 0){
+			if(board.getValueAt(row,col) == 0){
 				
 				int64_t combinedWeightScore = 0;
 				
-				GameBoard* baseBoard = new GameBoard(*board);
-				baseBoard->setValueAt(TILE_BASE_VALUE, row, col);
+				GameBoard baseBoard = GameBoard(board);
+				baseBoard.setValueAt(TILE_BASE_VALUE, row, col);
 				combinedWeightScore += TILE_2_PROBABILITY * ABminimax(baseBoard, depth-1, alpha, beta, true);
 				
-				GameBoard* doubleBaseBoard = new GameBoard(*board);
-				doubleBaseBoard->setValueAt(2*TILE_BASE_VALUE, row, col);
+				GameBoard doubleBaseBoard = GameBoard(board);
+				doubleBaseBoard.setValueAt(2*TILE_BASE_VALUE, row, col);
 				combinedWeightScore += TILE_4_PROBABILITY * ABminimax(doubleBaseBoard, depth-1, alpha, beta, true);
 				
 				potentialLowerBeta = potentialLowerBeta < combinedWeightScore ? potentialLowerBeta : combinedWeightScore;
@@ -181,22 +179,13 @@ int64_t AI::expectiMax(const GameBoard& board, int8_t depth, bool mover)const{
 	}
 	
 	if(board.checkMate() || !board.maxTileInTLCorner()){
-		
-		int64_t sum = 0;
-		
-		for(int row = 0; row < board.getSize(); row++){
-			for(int col = 0; col < board.getSize(); col++){
-				sum += board.getValueAt(row, col);
-			}
-		}
-		
+		int64_t sum = board.boardSum();
 		return -(sum * depth * depth);
 	}
 	
 	if(mover){
 		
 		int64_t maxScore = std::numeric_limits<int64_t>::min();
-		
 		
 		for(const Direction dir : directionIterator){
 			if(board.boardMoveableIn(dir)){

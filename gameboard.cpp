@@ -32,10 +32,9 @@ GameBoard::~GameBoard(){}
 GameBoard::GameBoard(GameBoard const & toCopyFrom)
 :SIZE(toCopyFrom.getSize())
 {
-	
 	for(int row = 0; row < SIZE; row++){
 		for(int col = 0; col < SIZE; col++){
-			board[row][col] = toCopyFrom.getValueAt(row, col);
+			board[row][col] = toCopyFrom.board[row][col];
 			int* address = &board[row][col];
 			rows[row][col] = address;
 			cols[col][row] = address;
@@ -413,6 +412,15 @@ int** GameBoard::getTable()const{
 	return board;
 }
 
+int GameBoard::boardSum()const{
+	int sum = 0;
+	for(int i = 0; i < SIZE; i++){
+		for(int j = 0; j < SIZE; j++){
+			sum += board[i][j];
+		}
+	}
+	return sum;
+}
 
 std::string GameBoard::toString() const{
 	
