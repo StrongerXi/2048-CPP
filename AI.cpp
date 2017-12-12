@@ -32,7 +32,7 @@ void AI::simulate(int8_t depth){
 		Direction dir =  board->score > 60000 ? expectiMaxMove(depth+1) : expectiMaxMove(depth);
 		board->score += board->moveInDir(dir);
 		board->generateNewTile();
-		//std::cout<< board->toString();
+		std::cout<< board->toString();
 	}
 	
 	std::cout<< board->toString();
@@ -156,8 +156,8 @@ Direction AI::expectiMaxMove(int8_t depth)const{
 	for(Direction dir : directionIterator){
 		if(board->boardMoveableIn(dir)){
 			
-			GameBoard* newBoard = new GameBoard(*board);
-			int32_t temp = newBoard->moveInDir(dir);
+			GameBoard newBoard = GameBoard(*board);
+			int32_t temp = newBoard.moveInDir(dir);
 			
 			temp += expectiMax(newBoard, depth*2-1, false);
 			
@@ -167,7 +167,6 @@ Direction AI::expectiMaxMove(int8_t depth)const{
 				bestScore = temp;
 				bestMove = dir;
 			}
-			delete newBoard;
 		}
 	}
 	
@@ -175,19 +174,19 @@ Direction AI::expectiMaxMove(int8_t depth)const{
 }
 
 
-int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
+int64_t AI::expectiMax(const GameBoard& board, int8_t depth, bool mover)const{
 	
 	if(depth == 0){
-		return boardEvaluation(board);
+		return boardEvaluation(&board);
 	}
 	
-	if(board->checkMate() || !board->maxTileInTLCorner()){
+	if(board.checkMate() || !board.maxTileInTLCorner()){
 		
 		int64_t sum = 0;
 		
-		for(int row = 0; row < board->getSize(); row++){
-			for(int col = 0; col < board->getSize(); col++){
-				sum += board->getValueAt(row, col);
+		for(int row = 0; row < board.getSize(); row++){
+			for(int col = 0; col < board.getSize(); col++){
+				sum += board.getValueAt(row, col);
 			}
 		}
 		
@@ -200,19 +199,17 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 		
 		
 		for(const Direction dir : directionIterator){
-			if(board->boardMoveableIn(dir)){
+			if(board.boardMoveableIn(dir)){
 				
 				int64_t scoreInDir = 0;
 				
-				GameBoard* newBoard = new GameBoard(*board);
+				GameBoard newBoard = GameBoard(board);
 				
-				scoreInDir += newBoard->moveInDir(dir);
+				scoreInDir += newBoard.moveInDir(dir);
 				
 				scoreInDir += expectiMax(newBoard, depth-1, false);
 				
 				maxScore = scoreInDir > maxScore ? scoreInDir : maxScore;
-				
-				delete newBoard;
 			}
 		}
 		return maxScore;
@@ -224,15 +221,15 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 	int count = 0;
 	int64_t expectedSum = 0;
 	
-	for(int row = 0; row < board->getSize(); row++){
+	for(int row = 0; row < board.getSize(); row++){
 		
-		for(int col = 0; col < board->getSize(); col++){
+		for(int col = 0; col < board.getSize(); col++){
 		
-			if (board->getValueAt(row, col) == 0){
+			if (board.getValueAt(row, col) == 0){
 				count++;
 
-				GameBoard* baseBoard = new GameBoard(*board);
-				baseBoard->setValueAt(TILE_BASE_VALUE, row, col);
+				GameBoard baseBoard = GameBoard(board);
+				baseBoard.setValueAt(TILE_BASE_VALUE, row, col);
 				int64_t baseTileScore = expectiMax(baseBoard, depth-1, true);
 				
 				expectedSum += (TILE_2_PROBABILITY * baseTileScore);
@@ -240,13 +237,11 @@ int64_t AI::expectiMax(const GameBoard* board, int8_t depth, bool mover)const{
 				if(depth_to_search - depth < 6){
 					
 					//GameBoard* doubleBaseBoard = new GameBoard(*board);
-					baseBoard->setValueAt(2*TILE_BASE_VALUE, row, col);
+					baseBoard.setValueAt(2*TILE_BASE_VALUE, row, col);
 	
 					int64_t doubleBaseTileScore = expectiMax(baseBoard, depth-1, true);
 					expectedSum += (TILE_4_PROBABILITY * doubleBaseTileScore);
 				}
-				
-				delete baseBoard;
 			}
 		}
 	}

@@ -31,7 +31,7 @@ public:
 	
 	Direction expectiMaxMove(int8_t depth)const;
 	
-	int64_t expectiMax(const GameBoard* board, int8_t depth, bool mover)const;
+	int64_t expectiMax(const GameBoard& board, int8_t depth, bool mover)const;
 	
 private:
 	

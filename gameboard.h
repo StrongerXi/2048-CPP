@@ -72,20 +72,20 @@ private:
 	
 	bool checkTileMoveable(int row, int col)const;
 	
-	void pushArrayLeft(int**&);
-	int32_t mergeArrayLeft(int**&);
-	void push2DArrayLeft(int***&);
-	int32_t merge2DArrayLeft(int***&);
+	void pushArrayLeft(int*[BOARD_SIZE]);
+	int32_t mergeArrayLeft(int*[BOARD_SIZE]);
+	void push2DArrayLeft(int*[BOARD_SIZE][BOARD_SIZE]);
+	int32_t merge2DArrayLeft(int*[BOARD_SIZE][BOARD_SIZE]);
 	
-	void pushArrayRight(int**&);
-	int32_t mergeArrayRight(int**&);
-	void push2DArrayRight(int***&);
-	int32_t merge2DArrayRight(int***&);
+	void pushArrayRight(int*[BOARD_SIZE]);
+	int32_t mergeArrayRight(int*[BOARD_SIZE]);
+	void push2DArrayRight(int*[BOARD_SIZE][BOARD_SIZE]);
+	int32_t merge2DArrayRight(int*[BOARD_SIZE][BOARD_SIZE]);
 	
 	// Determine whether an given array can be moved/merged towards
 	// right or left
-	bool canArrayMoveRight(int**&) const;
-	bool canArrayMoveLeft(int**&) const;
+	bool canArrayMoveRight(int*[BOARD_SIZE]) const;
+	bool canArrayMoveLeft(int*[BOARD_SIZE]) const;
 	
 	
 	// Check whether board is moveable in each direction
@@ -98,8 +98,9 @@ private:
 	
 	const int8_t SIZE;
 	
-	int*** rows;
-	int*** cols;
+	int board[BOARD_SIZE][BOARD_SIZE];
+	int* rows[BOARD_SIZE][BOARD_SIZE];
+	int* cols[BOARD_SIZE][BOARD_SIZE];
 };
 
 

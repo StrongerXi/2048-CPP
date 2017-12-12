@@ -42,7 +42,7 @@ int main(int argc, const char * argv[]) {
 	
 	
 	srand((unsigned int)time(0));
-
+	std::cout<<"go\n";
 	
 	AI bot = AI();
 	

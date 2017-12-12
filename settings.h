@@ -9,6 +9,8 @@
 #ifndef settings_h
 #define settings_h
 
+const int BOARD_SIZE = 4;
+
 const int TILE_BASE_VALUE = 2;
 
 const float TILE_2_PROBABILITY = 0.9;

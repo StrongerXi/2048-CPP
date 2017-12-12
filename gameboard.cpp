@@ -15,57 +15,30 @@
 GameBoard::GameBoard(int8_t size)
 :SIZE(size)
 {
-	rows = new int**[size];
-	cols = new int**[size];
-	
 	for(int rindex = 0; rindex < size; rindex++){
-		rows[rindex] = new int*[size];
 		for(int cindex = 0; cindex < size; cindex++){
-			rows[rindex][cindex] = new int (0);
-		}
-	}
-	
-	for(int cindex = 0; cindex < size; cindex++){
-		cols[cindex] = new int*[size];
-		for(int rindex=0; rindex<size; rindex++){
-			cols[cindex][rindex] = rows[rindex][cindex];
+			board[rindex][cindex] = 0;
+			int* address = &board[rindex][cindex];
+			rows[rindex][cindex] = address;
+			cols[cindex][rindex] = address;
 		}
 	}
 	score = 0;
 	
 }
 
-GameBoard::~GameBoard(){
-	for(int row = 0; row < SIZE; row++){
-		for(int col = 0; col < SIZE; col++){
-			delete rows[row][col];
-		}
-		delete[] rows[row];
-		delete[] cols[row];
-	}
-	
-	delete[] rows;
-	delete[] cols;
-}
+GameBoard::~GameBoard(){}
 
 GameBoard::GameBoard(GameBoard const & toCopyFrom)
 :SIZE(toCopyFrom.getSize())
 {
 	
-	rows = new int**[SIZE];
-	cols = new int**[SIZE];
-	
 	for(int row = 0; row < SIZE; row++){
-		rows[row] = new int*[SIZE];
 		for(int col = 0; col < SIZE; col++){
-			rows[row][col] = new int (toCopyFrom.getValueAt(row, col));
-		}
-	}
-	
-	for(int col = 0; col < SIZE; col++){
-		cols[col] = new int*[SIZE];
-		for(int row = 0; row < SIZE; row++){
-			cols[col][row] = rows[row][col];
+			board[row][col] = toCopyFrom.getValueAt(row, col);
+			int* address = &board[row][col];
+			rows[row][col] = address;
+			cols[col][row] = address;
 		}
 	}
 	score = toCopyFrom.score;
@@ -84,7 +57,7 @@ bool GameBoard::boardMoveableIn(Direction dir)const{
 
 bool GameBoard::canMoveUp()const{
 	for(int index = 0; index < SIZE; index++){
-		if(canArrayMoveLeft(cols[index])){
+		if(canArrayMoveLeft((int**) cols[index])){
 			return true;
 		}
 	}
@@ -93,7 +66,7 @@ bool GameBoard::canMoveUp()const{
 
 bool GameBoard::canMoveDown()const{
 	for(int index = SIZE-1; index >= 0; index--){
-		if(canArrayMoveRight(cols[index])){
+		if(canArrayMoveRight((int**) cols[index])){
 			return true;
 		}
 	}
@@ -102,7 +75,7 @@ bool GameBoard::canMoveDown()const{
 
 bool GameBoard::canMoveLeft()const{
 	for(int index = 0; index < SIZE; index++){
-		if(canArrayMoveLeft(rows[index])){
+		if(canArrayMoveLeft((int**) rows[index])){
 			return true;
 		}
 	}
@@ -111,7 +84,7 @@ bool GameBoard::canMoveLeft()const{
 
 bool GameBoard::canMoveRight()const{
 	for(int index = SIZE-1; index >= 0; index--){
-		if(canArrayMoveRight(rows[index])){
+		if(canArrayMoveRight((int**) rows[index])){
 			return true;
 		}
 	}
@@ -122,14 +95,14 @@ bool GameBoard::canMoveRight()const{
 // Calculate how many zeros there are starting from right, before
 // encountering first non-zero term
 // Check if that number agree with the total # of zeros in this array
-bool GameBoard::canArrayMoveLeft(int**& arr)const{
+bool GameBoard::canArrayMoveLeft(int** arr)const{
 	
 	bool hasZeroBetweenVal = false;
-	int currentPivot = *arr[SIZE-1];
+	int currentPivot = *(arr[SIZE-1]);
 	
 	for(int index = SIZE-2; index >= 0; index--){
 		
-		int thisVal = *arr[index];
+		int thisVal = *(arr[index]);
 		
 		if(thisVal == 0){
 			if(currentPivot != thisVal){
@@ -150,14 +123,14 @@ bool GameBoard::canArrayMoveLeft(int**& arr)const{
 // Calculate how many zeros there are starting from left, before
 // encountering first non-zero term
 // Check if that number agree with the total # of zeros in this array
-bool GameBoard::canArrayMoveRight(int**& arr)const{
+bool GameBoard::canArrayMoveRight(int** arr)const{
 	
 	bool hasZeroBetweenVal = false;
-	int currentPivot = *arr[0];
+	int currentPivot = *(arr[0]);
 	
 	for(int index = 1; index < SIZE; index++){
 		
-		int thisVal = *arr[index];
+		int thisVal = *(arr[index]);
 		
 		if(thisVal == 0){
 			if(currentPivot != thisVal){
@@ -224,27 +197,27 @@ int32_t GameBoard::moveDown(){
 
 int32_t GameBoard::moveLeft(){
 	push2DArrayLeft(rows);
-	int32_t score = merge2DArrayLeft(rows);
+	int32_t score = merge2DArrayLeft( rows);
 	push2DArrayLeft(rows);
 	return score;
 }
 
 int32_t GameBoard::moveRight(){
-	push2DArrayRight(rows);
-	int32_t score = merge2DArrayRight(rows);
-	push2DArrayRight(rows);
+	push2DArrayRight( rows);
+	int32_t score = merge2DArrayRight( rows);
+	push2DArrayRight( rows);
 	return score;
 }
 
 
 
-void GameBoard::push2DArrayLeft(int***& arr2D){
+void GameBoard::push2DArrayLeft(int* arr2D[BOARD_SIZE][BOARD_SIZE]){
 	for(int index = 0; index < SIZE; index++){
-		pushArrayLeft(arr2D[index]);
+		pushArrayLeft((arr2D)[index]);
 	}
 }
 
-int32_t GameBoard::merge2DArrayLeft(int***& arr2D){
+int32_t GameBoard::merge2DArrayLeft(int* arr2D[BOARD_SIZE][BOARD_SIZE]){
 	int32_t score = 0;
 	for(int index = 0; index < SIZE; index++){
 		score += mergeArrayLeft(arr2D[index]);
@@ -257,11 +230,11 @@ int32_t GameBoard::merge2DArrayLeft(int***& arr2D){
 // then push them leftwards WITHOUT MERGING
 // starting from leftmost index, look towards the right for the first
 // non-empty number, then moves that number to the current index, and set that number to 0
-void GameBoard::pushArrayLeft(int**& arr){
+void GameBoard::pushArrayLeft(int** arr){
 	
 	for(int currentIndex = 0; currentIndex<SIZE; currentIndex++){
 		
-		if(*arr[currentIndex] != 0) continue;
+		if(*(arr[currentIndex]) != 0) continue;
 		
 		for(int searchIndex = currentIndex+1; searchIndex<SIZE; searchIndex++){
 			if(*arr[searchIndex] != 0){
@@ -278,7 +251,7 @@ void GameBoard::pushArrayLeft(int**& arr){
 // while reading from the left to right
 // PRE-CONDITION: The non-empty tiles in the row must all be located adjacently on the left
 // VIOLATION: [2, 0, 2, 0], [0, 2, 2, 2], [2, 2, 0, 2]...
-int32_t GameBoard::mergeArrayLeft(int**& arr){
+int32_t GameBoard::mergeArrayLeft(int** arr){
 	
 	int32_t score = 0;
 	int index = 1;
@@ -302,13 +275,13 @@ int32_t GameBoard::mergeArrayLeft(int**& arr){
 
 
 
-void GameBoard::push2DArrayRight(int***& arr2D){
+void GameBoard::push2DArrayRight(int* arr2D[BOARD_SIZE][BOARD_SIZE]){
 	for(int index = 0; index < SIZE; index++){
 		pushArrayRight(arr2D[index]);
 	}
 }
 
-int32_t GameBoard::merge2DArrayRight(int***& arr2D){
+int32_t GameBoard::merge2DArrayRight(int* arr2D[BOARD_SIZE][BOARD_SIZE]){
 	int32_t score = 0;
 	for(int index = 0; index < SIZE; index++){
 		score += mergeArrayRight(arr2D[index]);
@@ -321,7 +294,7 @@ int32_t GameBoard::merge2DArrayRight(int***& arr2D){
 // then push them Rightwards WITHOUT MERGING
 // starting from Rightmost index, look towards the right for the first
 // non-empty number, then moves that number to the current index, and set that number to 0
-void GameBoard::pushArrayRight(int**& arr){
+void GameBoard::pushArrayRight(int** arr){
 	
 	for(int currentIndex = SIZE-1; currentIndex >= 0; currentIndex--){
 		
@@ -342,7 +315,7 @@ void GameBoard::pushArrayRight(int**& arr){
 // while reading from the Right to right
 // PRE-CONDITION: The non-empty tiles in the row must all be located adjacently on the Right
 // VIOLATION: [2, 0, 2, 0], [0, 2, 2, 2], [2, 2, 0, 2]...
-int32_t GameBoard::mergeArrayRight(int**& arr){
+int32_t GameBoard::mergeArrayRight(int** arr){
 	
 	int32_t score = 0;
 	int index = SIZE-2;
@@ -402,7 +375,7 @@ int32_t GameBoard::getScore()const{
 }
 
 int GameBoard::getValueAt(int row, int col)const{
-	return *rows[row][col];
+	return board[row][col];
 }
 
 
