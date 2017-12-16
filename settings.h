@@ -24,7 +24,7 @@ const int evalMatrix1[4][4] =
 	{32,16,8,4},
 	{-1,0,1,2}};
 
-const int evalMatrix5[4][4] =
+const int evalMatrix[4][4] =
 {	{23,14,11,4},
 	{17,12,10,3},
 	{14,11,8,2},
@@ -36,25 +36,25 @@ const int evalMatrix2[4][4] =
 	{64,-32,-128,-512},
 	{16,-128,-512,-1024}};
 
-const int evalMatrix3[4][4] =
+const int evalMatrix5[4][4] =
 	{{80,40,20,4},
 	{60,30,15,3},
 	{40,20,10,2},
 	{20,10,5,1}};
 
-const int evalMatrix4[4][4] =
+const int evalMatrix3[4][4] =
 {	{320,80,40,4},
 	{160,40,20,3},
 	{80,20,10,2},
 	{15,10,5,1}};
 
-const int evalMatrix[4][4] =
+const int evalMatrix6[4][4] =
 {	{45,40,26,4},
 	{34,30,23,3},
 	{27,24,20,2},
 	{11,8,5,1}};
 
-const int evalMatrix6[4][4] =
+const int evalMatrix4[4][4] =
 {	{45,40,36,4},
 	{32,28,24,3},
 	{20,17,14,2},
