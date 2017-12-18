@@ -53,13 +53,13 @@ const int evalMatrix6[4][4] =
 	{27,24,20,2},
 	{11,8,5,1}};
 
-const int evalMatrixx[4][4] =
+const int evalMatrix[4][4] =
 {	{45,40,36,4},
 	{32,28,24,3},
 	{20,17,14,2},
 	{11,8,5,1}};
 
-const int evalMatrix[4][4] =
+const int evalMatrixx[4][4] =
 {	{45,40,36,32},
 	{25,22,20,17},
 	{14,11,9,7},

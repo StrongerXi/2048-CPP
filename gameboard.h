@@ -5,7 +5,6 @@
 //  Created by Ryan Guo on 12/5/17.
 //  Copyright © 2017 Ryan Guo. All rights reserved.
 
-
 #ifndef gameboard_h
 #define gameboard_h
 

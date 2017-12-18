@@ -5,7 +5,6 @@
 //  Created by Ryan Guo on 12/6/17.
 //  Copyright © 2017 Ryan Guo. All rights reserved.
 //
-
 #ifndef AI_hpp
 #define AI_hpp
 
