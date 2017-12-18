@@ -1,0 +1,9 @@
+main.o: main.cpp gameboard.h settings.h gameClient.hpp AI.hpp
+AI.o: AI.cpp AI.hpp gameboard.h settings.h
+gameClient.o: gameClient.cpp gameClient.hpp gameboard.h settings.h
+gameboard.o: gameboard.cpp gameboard.h settings.h
+main.o: main.cpp gameboard.h settings.h gameClient.hpp AI.hpp
+AI.o: AI.cpp AI.hpp gameboard.h settings.h
+gameClient.o: gameClient.cpp gameClient.hpp gameboard.h settings.h
+gameboard.o: gameboard.cpp gameboard.h settings.h
+main.o: main.cpp gameboard.h settings.h gameClient.hpp AI.hpp

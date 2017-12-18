@@ -421,7 +421,18 @@ int GameBoard::boardSum()const{
 	}
 	return sum;
 }
-
+int64_t GameBoard::boardEvaluation()const{
+	
+	int64_t fitness = 0;
+	
+	for(int row = 0; row < SIZE; row++){
+		for(int col = 0; col < SIZE; col++){
+			fitness += evalMatrix[row][col] * board[row][col];
+		}
+	}
+	
+	return fitness;
+}
 std::string GameBoard::toString() const{
 	
 	std::string str = "";

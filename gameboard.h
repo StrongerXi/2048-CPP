@@ -4,7 +4,7 @@
 //
 //  Created by Ryan Guo on 12/5/17.
 //  Copyright © 2017 Ryan Guo. All rights reserved.
-//
+
 
 #ifndef gameboard_h
 #define gameboard_h
@@ -14,8 +14,6 @@
 #include "settings.h"
 
 class GameBoard{
-	
-	
 	
 public:
 	
@@ -37,7 +35,6 @@ public:
 	
 	// Check whether the board is moveable in specific direction
 	bool boardMoveableIn(Direction)const;
-	
 	
 	// Generate a new Tile with random value on the board
 	void generateNewTile();
@@ -68,6 +65,7 @@ public:
 	
 	int32_t score;
 
+    int64_t boardEvaluation()const;
 	
 private:
 	

@@ -65,7 +65,7 @@ Direction AI::expectiMaxMove(int8_t depth)const{
 int64_t AI::expectiMax(const GameBoard& board, int8_t depth, bool mover)const{
 	
 	if(depth == 0){
-		return boardEvaluation(&board);
+		return board.boardEvaluation();
 	}
 	
 	if(board.checkMate() || !board.maxTileInTLCorner()){
@@ -125,15 +125,4 @@ int64_t AI::expectiMax(const GameBoard& board, int8_t depth, bool mover)const{
 
 
 
-int64_t AI::boardEvaluation(const GameBoard* board)const{
-	
-	int64_t fitness = 0;
-	
-	for(int row = 0; row < board->getSize(); row++){
-		for(int col = 0; col < board->getSize(); col++){
-			fitness += evalMatrix[row][col] * board->getValueAt(row, col);
-		}
-	}
-	
-	return fitness;
-}
+

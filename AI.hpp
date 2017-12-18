@@ -32,7 +32,6 @@ private:
 
 	// Calculates a score that represents the "fitness" of input board state
 	// Heuristics....
-	int64_t boardEvaluation(const GameBoard*)const;
 };
 
 #endif /* AI_hpp */
